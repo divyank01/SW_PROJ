@@ -1,0 +1,10 @@
+.hide{
+    display:none !important;
+}
+.spinner{
+    background-image: url('https://eggdesign.ie/wp-content/plugins/portfolio-filter-gallery//img/loading-icon.gif')
+}
+.spinner_whole{
+    width: 100%;
+    height: 100%;
+}

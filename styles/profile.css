@@ -1,0 +1,17 @@
+main{
+    min-height: 83vh;
+    margin-top: 64px;
+}
+.hdr{
+    min-width: 100vw;
+}
+#description{
+    height:300px;
+    width: 100%;
+}
+#subject{
+    width:100%;
+}
+.add-fav{
+    float: right;
+}

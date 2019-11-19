@@ -1,0 +1,199 @@
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+            .bd-placeholder-img-lg {
+                font-size: 3.5rem;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="/styles/profile.css">
+    <link rel="stylesheet" href="/styles/common.css">
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+            <a class="navbar-brand" href="/home">Home</a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse"
+                aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarCollapse">
+                <ul class="navbar-nav mr-auto">
+                    <!--<li class="nav-item active">
+                        <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">Link</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link disabled" href="#">Disabled</a>
+                    </li>-->
+                </ul>
+                <div class="form-inline mt-2 mt-md-0">
+                    <a href="#" class="badge badge-light" id="logout-btn">Logout</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        <div class="spinner_whole">
+            <div class="spinner"></div>
+        </div>
+
+
+        <!-- Marketing messaging and featurettes
+          ================================================== -->
+        <!-- Wrap the rest of the page in another container to center all the content. -->
+
+        <div class="container hdr">
+            <div class="row">
+                <div class="col-md-3">
+
+                </div>
+                <div class="col-md-6 text-center">
+                    <img src="/imgs/avatar.png" height="150" />
+                    <h1 id="user_name"></h1>
+                    <div class="row text-center hide" id="user_button">
+                        <div class="col">
+                            <button type="button" class="btn btn-light" id="show_search">Search</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Certificates</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Donations</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light" id="_fav">Favorite</button>
+                        </div>
+                    </div>
+                    <div class="row text-center hide" id="ngo_buttons">
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Accept</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Events</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Certificate</button>
+                        </div>
+                        <div class="col">
+                            <button type="button" class="btn btn-light">Volunteers</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+
+                </div>
+            </div>
+            <hr />
+            <div class="container">
+                <div id="event_row" class="hide">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10 text-center">
+                            <h3>Events</h3>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <ul class="list-group" id="int-events">
+
+                            </ul>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+
+                <!--list all fav for donations-->
+                <div class="row hide" id="show_fav_ngo_row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10">
+                        <h3 class="text-center">Help the community</h3>
+                        <ul class="list-group" id="fav_ngo_list">
+
+                        </ul>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+                <!--Search NGOs-->
+                <div id="search_row" class="hide">
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10 text-center">
+                            <h3>Search NGOs</h3>
+                            <input id="ngoname" placeholder="NGO Name" /><br /><br />
+                            <button type="button" class="btn btn-primary" id="search_ngo_btn">Search</button>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                    <br /><br />
+                    <div class="row">
+                        <div class="col-md-1"></div>
+                        <div class="col-md-10">
+                            <ul class="list-group" id="seach_results">
+
+                            </ul>
+                        </div>
+                        <div class="col-md-1"></div>
+                    </div>
+                </div>
+
+                <!--Add new events here-->
+                <div class="row hide" id="add_event_row">
+                    <div class="col-md-1"></div>
+                    <div class="col-md-10 text-center">
+                        <h3>Post an event</h3>
+                        <input id="subject" placeholder="Subject line" /><br /><br />
+                        <textarea id="description" placeholder="description"></textarea><br /><br />
+                        <button type="button" class="btn btn-primary" id="add_event_btn">Submit</button>
+                    </div>
+                    <div class="col-md-1"></div>
+                </div>
+
+
+            </div>
+
+        </div><!-- /.container -->
+
+    </main>
+    <!-- FOOTER -->
+    <footer class="footer mt-auto py-3">
+        <div class="container">
+            <p class="float-right"><a href="#">Back to top</a></p>
+            <p>&copy; 2017-2019 Company, Inc. &middot; <a href="#">Privacy</a> &middot; <a href="#">Terms</a></p>
+        </div>
+    </footer>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous">
+    </script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous">
+    </script>
+    <script src="/js/profile_foot.js"></script>
+    <script src="/js/common.js"></script>
+</body>
+
+</html>
