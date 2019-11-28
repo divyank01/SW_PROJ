@@ -35,6 +35,9 @@
             </button>
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active" id="prfllnk">
+                        <a class="nav-link" href="/profile">Profile<span class="sr-only">(current)</span></a>
+                    </li>
                     <!--<li class="nav-item active">
                         <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
                     </li>
@@ -53,10 +56,9 @@
     </header>
 
     <main role="main">
-        <div class="spinner_whole">
-            <div class="spinner"></div>
+        <div class="spinner-wrapper" id="myspinner">
+            <div class="loader">Loading...</div>
         </div>
-
 
         <!-- Marketing messaging and featurettes
           ================================================== -->
@@ -86,7 +88,7 @@
                     </div>
                     <div class="row text-center hide" id="ngo_buttons">
                         <div class="col">
-                            <button type="button" class="btn btn-light">Accept</button>
+                            <button type="button" class="btn btn-light" id="accept_donation_btn">Accept</button>
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-light">Events</button>
@@ -129,9 +131,8 @@
                     <div class="col-md-1"></div>
                     <div class="col-md-10">
                         <h3 class="text-center">Help the community</h3>
-                        <ul class="list-group" id="fav_ngo_list">
-
-                        </ul>
+                        <div class="container" id="fav_ngo_list">
+                        </div>
                     </div>
                     <div class="col-md-1"></div>
                 </div>
@@ -169,6 +170,25 @@
                         <button type="button" class="btn btn-primary" id="add_event_btn">Submit</button>
                     </div>
                     <div class="col-md-1"></div>
+                </div>
+
+                 <!-- show donations to accept -->
+                 <div class="row hide" id="incoming_don">
+                    <h3 class="text-center">Pending Donations</h3>
+                    <table class="table">
+                        <thead class=".thead-dark">
+                          <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Email</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody id="in_don_body">
+                          
+                        </tbody>
+                      </table>
                 </div>
 
 

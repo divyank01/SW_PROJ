@@ -8,7 +8,12 @@ import {
     logout,
     findNgos,
     addInterest,
-    getInterestedEvents,getFavNgos
+    getInterestedEvents,
+    getFavNgos,
+    findNgoById,
+    makeDonation,
+    getDonation,
+    checkout,getPendingDonations,acceptDonation
 } from '../services/user-services'
 import render from '../render/render-page'
 import path from 'path'
@@ -23,11 +28,16 @@ export default (app) => {
         router.post('/api/user/getInterestedEvents', getInterestedEvents)
         router.post('/api/user/addNgo', createUser)
         router.post('/api/user/addEvent', addEvent)
-        router.post('/api/user/getFavNgos',getFavNgos)
+        router.post('/api/user/getFavNgos', getFavNgos)
         router.post('/api/user/findNgo', findNgos)
+        router.post('/api/user/findNgoById', findNgoById)
         router.post('/api/logout', logout)
         router.post('/api/signin', signin)
-
+        router.post('/api/user/donate', makeDonation)
+        router.post('/api/user/getDonation', getDonation)
+        router.post('/api/user/checkout', checkout)
+        router.post('/api/user/getPendingDonations',getPendingDonations)
+        router.post('/api/user/acceptDonation',acceptDonation)
     }
     const setupRender = () => {
         router.get('/*', render)

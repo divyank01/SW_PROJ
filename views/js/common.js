@@ -4,6 +4,7 @@ $(document).ready(()=>{
             if(data && data.status==='SUCCESS'){
                 window.location.href = '/signin'
             }
+            window.location.href = '/'
         })
     })
 })

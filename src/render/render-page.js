@@ -1,31 +1,46 @@
 import path from 'path'
-const render = (req,res) => {
+const render = (req, res) => {
     const _path = req.path
     console.log(_path)
-    switch(_path){
+    const isValid = (res) => {
+        if (!(req.cookies['auth-user'] && JSON.parse(req.cookies['auth-user']).userId)) {
+            res.redirect('/')
+            //res.sendFile(path.resolve(__dirname, `../../`, 'views', 'home.html'))
+            return false
+        }
+        return true
+    }
+    switch (_path) {
         case `/home`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','home.html'))
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'home.html'))
             break
         case `/signin`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','signin.html'))
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'signin.html'))
             break
         case `/signup`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','signup.html'))
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'signup.html'))
             break
         case `/donate`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','donation.html'))
+            if (isValid(res))
+                res.sendFile(path.resolve(__dirname, `../../`, 'views', 'donation.html'))
             break
         case `/profile`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','profile.html'))
+            if (isValid(res))
+                res.sendFile(path.resolve(__dirname, `../../`, 'views', 'profile.html'))
             break
         case `/search`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','profile.html'))
+            if (isValid(res))
+                res.sendFile(path.resolve(__dirname, `../../`, 'views', 'profile.html'))
             break
         case `/add_ngo`:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','ngo_reg.html'))
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'ngo_reg.html'))
+            break
+        case `/ngo_profile`:
+            if (isValid(res))
+                res.sendFile(path.resolve(__dirname, `../../`, 'views', 'ngo_profile.html'))
             break
         default:
-            res.sendFile(path.resolve(__dirname,`../../`,'views','home.html'))
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'home.html'))
     }
 }
 

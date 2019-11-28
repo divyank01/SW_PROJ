@@ -10,7 +10,8 @@ const TYPES_PK = {
     NGO:'ngoId',
     Login:'loginId',
     Events: 'eventId',
-    Interest: `interestId`
+    Interest: `interestId`,
+    Transection: 'txnId'
 }
 
 export default {
@@ -40,6 +41,7 @@ export default {
     getAll:async (type,filter) => {
         await client.connect()
         const db = client.db(DB)
+        console.log(`finding by ${JSON.stringify(filter)}`)
         const out = await db.collection(type).find(filter).toArray()
         return out
     },
@@ -48,5 +50,6 @@ export default {
         const db = client.db(DB)
         console.log(`budating by ${JSON.stringify(id)}`)
         await db.collection(type).update({[TYPES_PK[type]]:parseInt(id)},{'$set':data})
+        return data
     },
 }

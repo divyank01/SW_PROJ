@@ -14,6 +14,7 @@ const createUser = async (req, res) => {
         type,
         description,
         ngoname,
+        logo
     } = req.body
     if (type === 'p') {
         const data = await save('User', {
@@ -35,6 +36,7 @@ const createUser = async (req, res) => {
             ...data
         }))
     } else if (type === 'n') {
+        debugger
         const data = await save('User', {
             email,
             firstname,
@@ -43,6 +45,7 @@ const createUser = async (req, res) => {
         })
         const ngoData = await save('NGO', {
             email,
+            logo,
             firstname,
             lastname,
             description,
@@ -350,6 +353,191 @@ const getFavNgos = async (req, res) => {
     }
 }
 
+const findNgoById = async (req, res) => {
+    const {
+        ngoId
+    } = req.body
+    const out = await get('NGO', {
+        ngoId: parseInt(ngoId)
+    })
+    console.log(out)
+    if (out) {
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            ngo: out
+        }))
+    } else {
+        res.write(JSON.stringify({
+            status: "FAILURE"
+        }))
+    }
+    res.end()
+}
+
+const makeDonation = async (req, res) => {
+    const {
+        amt,
+        ngoId
+    } = req.body
+    if (req.cookies['auth-user']) {
+        console.log(req.cookies['auth-user'])
+        console.log({
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const data = await get('User', {
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const txnData = await save('Transection', {
+            amt,
+            userId: data.userId,
+            ngoId,
+            status: 'PENDING'
+        })
+        console.log(txnData)
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            txnData
+        }))
+
+    }
+    res.end()
+}
+
+const getDonation = async (req, res) => {
+    const {
+        userId,
+        txnId
+    } = req.body
+    debugger
+    if (req.cookies['auth-user']) {
+        if (parseInt(JSON.parse(req.cookies['auth-user']).userId) !== parseInt(userId)) {
+            debugger
+            res.write(JSON.stringify({
+                status: "FAILURE",
+            }))
+            res.end()
+            return
+        }
+        debugger
+        console.log(req.cookies['auth-user'])
+        console.log({
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const data = await get('User', {
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const txnData = await get('Transection', {
+            userId: JSON.parse(req.cookies['auth-user']).userId,
+            txnId: parseInt(txnId)
+        })
+        const ngoData = await get('NGO', {
+            ngoId: parseInt(txnData.ngoId)
+        })
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            userData: data,
+            txnData,
+            ngoData
+        }))
+    }
+    res.end()
+}
+
+const checkout = async (req, res) => {
+    const {
+        address,
+        address2,
+        cardname,
+        cardno,
+        country,
+        cvv,
+        email,
+        exp,
+        firstname,
+        lastname,
+        paymentMethod,
+        state,
+        zip,
+        userId,
+        txnId
+    } = req.body
+    if (req.cookies['auth-user']) {
+        if (parseInt(JSON.parse(req.cookies['auth-user']).userId) !== parseInt(userId)) {
+            debugger
+            res.write(JSON.stringify({
+                status: "FAILURE",
+            }))
+            res.end()
+            return
+        }
+        const payload = {
+            address,
+            address2,
+            cardname,
+            cardno,
+            country,
+            cvv,
+            email,
+            exp,
+            firstname,
+            lastname,
+            paymentMethod,
+            state,
+            zip,
+            userId,
+            txnId:parseInt(txnId),
+            status: 'CONFIRMED'
+        }
+        const out = await update('Transection', payload, txnId)
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            txnData: out
+        }))
+    }
+    res.end()
+}
+
+const getPendingDonations = async (req, res) => {
+    if (req.cookies['auth-user']) {
+        console.log(req.cookies['auth-user'])
+        console.log({
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const ngoData = await get('NGO', {
+            userId: parseInt(JSON.parse(req.cookies['auth-user']).userId)
+        })
+        console.log(ngoData)
+        const txnData = await getAll('Transection', {
+            ngoId: ngoData.ngoId.toString(),
+            status: "CONFIRMED"
+        })
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            txnData
+        }))
+    }
+    res.end()
+}
+
+const acceptDonation = async (req, res) => {
+    const {
+        txnId
+    } = req.body
+    if (req.cookies['auth-user']) {
+        console.log(req.cookies['auth-user'])
+        console.log({
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        await update('Transection', {
+            status: "ACCEPTED"
+        }, txnId)
+        res.write(JSON.stringify({
+            status: "SUCCESS"
+        }))
+    }
+    res.end()
+}
+
 export default {
     createUser,
     getAuthUser,
@@ -359,5 +547,11 @@ export default {
     findNgos,
     addInterest,
     getInterestedEvents,
-    getFavNgos
+    getFavNgos,
+    findNgoById,
+    makeDonation,
+    getDonation,
+    checkout,
+    getPendingDonations,
+    acceptDonation
 }

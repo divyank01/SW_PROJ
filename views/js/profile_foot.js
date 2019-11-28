@@ -19,16 +19,18 @@ $(document).ready(() => {
                 </li>`)
                     })
                 }
+                $('#myspinner').addClass('hide')
             })
         } else {
             $('#user_name').html(`${res.ngoname}`)
             $('#ngo_buttons').removeClass("hide")
             $("#add_event_row").removeClass("hide")
+            $('#myspinner').addClass('hide')
         }
     })
 })
 
-const ids = ['event_row', 'show_fav_ngo_row', 'search_row', 'add_event_row']
+const ids = ['event_row', 'show_fav_ngo_row', 'search_row', 'add_event_row', 'myspinner','incoming_don']
 
 const show = (key) => {
     ids.forEach(elem => {
@@ -36,6 +38,9 @@ const show = (key) => {
     })
     if (key)
         $(`#${key}`).removeClass('hide')
+}
+const hide = (key) => {
+    $(`#${key}`).addClass('hide')
 }
 
 $('#add_event_btn').click(() => {
@@ -74,7 +79,6 @@ $('#search_ngo_btn').click(() => {
         }
         $(".srch-res-btn").click((e) => {
             const ngoId = e.target.dataset.ngoid
-            debugger
             $.post('/api/user/addInterest', {
                 ngoId
             }).done(() => {
@@ -87,18 +91,74 @@ $('#search_ngo_btn').click(() => {
     })
 })
 
-$('#_fav').click(() => {
-    show('show_fav_ngo_row')
+const getNewRow = (arr) => {
+    const mapOut = arr.map((key) => `<div class="text-center col-md-${12/arr.length} fav_ngo_a" data-ngo="${key.ngoId}">
+                    <img src="${key.logo}" class="img-thumbnail" height="200" width="200" data-ngo="${key.ngoId}"/><h4 class="text-center" data-ngo="${key.ngoId}">${key.ngoname}</h4>
+                </div>`)
+    const outReduce = mapOut.reduce((old, key) => old + key)
+    return `<div class="row">
+                ${outReduce}
+            </div>`
+}
 
-    $.post('/api/user/getFavNgos',{}).done(data =>{
+$('#_fav').click(() => {
+    show('myspinner')
+    $.post('/api/user/getFavNgos', {}).done(data => {
         $('#fav_ngo_list').empty()
         console.log(data)
-        JSON.parse(data).ngos.forEach(elem => {
-            $('#fav_ngo_list').append(`<li class="list-group-item list-group-item-dark">
-                    ${elem.ngoname}
-                    <button type="button" class="btn add-fav btn-primary list-group-item-primary srch-res-btn" data-ngoId="${elem.ngoId}">Donate</button>
-                </li>`
-            )
+        let temp = []
+        JSON.parse(data).ngos.forEach((elem, idx) => {
+            if ((idx + 1) % 3 == 0) {
+                temp.push(elem)
+                if(temp.length>0)
+                $('#fav_ngo_list').append(getNewRow(temp))
+                temp = []
+            } else {
+                temp.push(elem)
+            }
+        })
+        if(temp.length>0)
+        $('#fav_ngo_list').append(getNewRow(temp))
+        show('show_fav_ngo_row')
+        $(".fav_ngo_a").click((e) => {
+            const ngoId = e.target.dataset.ngo
+            window.location.href = '/ngo_profile?ngo_id='+ngoId
+            e.preventDefault()
+            event.stopPropagation();
+            event.stopImmediatePropagation();
+        })
+    })
+})
+
+$('#accept_donation_btn').click(()=>{
+    show('myspinner')
+    $.post('/api/user/getPendingDonations',{}).done((data)=>{
+        console.log(data)
+        show('incoming_don')
+        $('#in_don_body').empty()
+        const _data = JSON.parse(data)
+        _data.txnData.forEach((item,idx)=>{
+            $('#in_don_body').append(`
+            <tr id="txn_id_${item.tnxId}">
+                <th scope="row">${idx+1}</th>
+                <td>${item.firstname} ${item.lastname}</td>
+                <td>${item.email}</td>
+                <td>$${item.amt}</td>
+                <td><button class="btn btn-primary accept_donation_btn" data-txn="${item.txnId}" type="button">Accept</button></td>
+            </tr>
+            `)
+        })
+        $(".accept_donation_btn").click((e) => {
+            const txnId = e.target.dataset.txn
+            console.log(txnId)
+            $.post('/api/user/acceptDonation', {
+                txnId
+            }).done(() => {
+                $('#incoming_don').remove(`#txn_id_${txnId}`)
+            })
+            e.preventDefault()
+            event.stopPropagation();
+            event.stopImmediatePropagation();
         })
     })
 })
