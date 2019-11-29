@@ -13,7 +13,7 @@ import {
     findNgoById,
     makeDonation,
     getDonation,
-    checkout,getPendingDonations,acceptDonation
+    checkout,getPendingDonations,acceptDonation,donationsForUser
 } from '../services/user-services'
 import render from '../render/render-page'
 import path from 'path'
@@ -38,6 +38,7 @@ export default (app) => {
         router.post('/api/user/checkout', checkout)
         router.post('/api/user/getPendingDonations',getPendingDonations)
         router.post('/api/user/acceptDonation',acceptDonation)
+        router.post('/api/user/donationsForUser',donationsForUser)
     }
     const setupRender = () => {
         router.get('/*', render)

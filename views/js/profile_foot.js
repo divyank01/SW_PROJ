@@ -21,6 +21,19 @@ $(document).ready(() => {
                 }
                 $('#myspinner').addClass('hide')
             })
+            $.post('/api/user/donationsForUser',{}).done(data => {
+                let total=0
+                console.log(data)
+                console.log('total'+total)
+                JSON.parse(data).txns.forEach(elem => {
+                    total=total+parseFloat(elem.amt)
+                })
+                console.log('total'+total)
+                const pers = (total/10000)*100
+                console.log('total'+pers)
+                $('#starz').css('width',pers+'%')
+                $('#don_meter').removeClass('hide')
+            })
         } else {
             $('#user_name').html(`${res.ngoname}`)
             $('#ngo_buttons').removeClass("hide")

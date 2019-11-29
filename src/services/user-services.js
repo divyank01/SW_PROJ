@@ -538,6 +538,24 @@ const acceptDonation = async (req, res) => {
     res.end()
 }
 
+const donationsForUser = async (req,res) => {
+    if (req.cookies['auth-user']) {
+        console.log(req.cookies['auth-user'])
+        console.log({
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        const data = await getAll('Transection', {
+            status: "ACCEPTED",
+            userId: JSON.parse(req.cookies['auth-user']).userId.toString()
+        })
+        console.log(data)
+        res.write(JSON.stringify({
+            status: "SUCCESS",
+            txns: data
+        }))
+    }
+    res.end()
+}
 export default {
     createUser,
     getAuthUser,
@@ -553,5 +571,5 @@ export default {
     getDonation,
     checkout,
     getPendingDonations,
-    acceptDonation
+    acceptDonation,donationsForUser
 }
