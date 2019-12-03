@@ -48,7 +48,7 @@ export default {
     update:async (type,data,id) => {
         await client.connect()
         const db = client.db(DB)
-        console.log(`budating by ${JSON.stringify(id)}`)
+        console.log(`updating by ${JSON.stringify(id)}`)
         await db.collection(type).update({[TYPES_PK[type]]:parseInt(id)},{'$set':data})
         return data
     },

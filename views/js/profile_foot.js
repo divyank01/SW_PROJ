@@ -1,4 +1,10 @@
+const redirect = (link) => {
+    window.location.href = link
+}
 $(document).ready(() => {
+    $('.un_con').click(()=>{
+        redirect('/soon')
+    })
     $.post('/api/user/getAuthUser', {}).done(out => {
         const res = JSON.parse(out)
         console.log(res)
@@ -43,6 +49,21 @@ $(document).ready(() => {
     })
 })
 
+
+const toggleSpin = () => {
+    $(`#myspinner`).toggleClass('hide')
+}
+
+const showDone = () => {
+    $('#done_container').addClass('done_class')
+    console.log("calling done")
+    $('#done_container').removeClass('hide')
+    setTimeout(()=>{
+        $('#done_container').removeClass('done_class')
+        $('#done_container').addClass('hide')
+    },1000)
+}
+
 const ids = ['event_row', 'show_fav_ngo_row', 'search_row', 'add_event_row', 'myspinner','incoming_don']
 
 const show = (key) => {
@@ -59,13 +80,16 @@ const hide = (key) => {
 $('#add_event_btn').click(() => {
     const subject = $('#subject').val()
     const description = $('#description').val()
-    debugger
+    toggleSpin()
     $.post('/api/user/addEvent', {
         subject,
         description
     }).done(out => {
         const res = JSON.parse(out)
         console.log(res)
+        toggleSpin()
+        showDone()
+        redirect('/profile')
     })
 })
 
@@ -92,10 +116,13 @@ $('#search_ngo_btn').click(() => {
         }
         $(".srch-res-btn").click((e) => {
             const ngoId = e.target.dataset.ngoid
+            toggleSpin()
             $.post('/api/user/addInterest', {
                 ngoId
             }).done(() => {
                 console.log('added ' + ngoId)
+                toggleSpin()
+                showDone()
             })
             e.preventDefault()
             event.stopPropagation();
@@ -135,7 +162,7 @@ $('#_fav').click(() => {
         show('show_fav_ngo_row')
         $(".fav_ngo_a").click((e) => {
             const ngoId = e.target.dataset.ngo
-            window.location.href = '/ngo_profile?ngo_id='+ngoId
+            redirect('/ngo_profile?ngo_id='+ngoId)
             e.preventDefault()
             event.stopPropagation();
             event.stopImmediatePropagation();
@@ -148,30 +175,38 @@ $('#accept_donation_btn').click(()=>{
     $.post('/api/user/getPendingDonations',{}).done((data)=>{
         console.log(data)
         show('incoming_don')
-        $('#in_don_body').empty()
         const _data = JSON.parse(data)
-        _data.txnData.forEach((item,idx)=>{
-            $('#in_don_body').append(`
-            <tr id="txn_id_${item.tnxId}">
-                <th scope="row">${idx+1}</th>
-                <td>${item.firstname} ${item.lastname}</td>
-                <td>${item.email}</td>
-                <td>$${item.amt}</td>
-                <td><button class="btn btn-primary accept_donation_btn" data-txn="${item.txnId}" type="button">Accept</button></td>
-            </tr>
-            `)
-        })
-        $(".accept_donation_btn").click((e) => {
+        const clickHandler = (e) => {
             const txnId = e.target.dataset.txn
             console.log(txnId)
+            toggleSpin()
             $.post('/api/user/acceptDonation', {
                 txnId
             }).done(() => {
-                $('#incoming_don').remove(`#txn_id_${txnId}`)
+                _data.txnData = _data.txnData.filter(key => key.txnId!=txnId)
+                setup(_data)
+                toggleSpin()
+                showDone()
             })
             e.preventDefault()
             event.stopPropagation();
             event.stopImmediatePropagation();
-        })
+        }
+        const setup = (d) => {
+            $('#in_don_body').empty()
+            d.txnData.forEach((item,idx)=>{
+                $('#in_don_body').append(`
+                <tr id="txn_id_${item.txnId}">
+                    <th scope="row">${idx+1}</th>
+                    <td>${item.firstname} ${item.lastname}</td>
+                    <td>${item.email}</td>
+                    <td>$${item.amt}</td>
+                    <td><button class="btn btn-primary accept_donation_btn" data-txn="${item.txnId}" type="button">Accept</button></td>
+                </tr>
+                `)
+            })
+            $(".accept_donation_btn").click(clickHandler)
+        }
+        setup(_data)
     })
 })

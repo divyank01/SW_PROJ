@@ -23,6 +23,11 @@
     </style>
     <link rel="stylesheet" href="/styles/profile.css">
     <link rel="stylesheet" href="/styles/common.css">
+    <script>
+        function gotoprofile(){
+            window.location.href='/profile'
+        }
+    </script>
 </head>
 
 <body>
@@ -59,6 +64,10 @@
         <div class="spinner-wrapper" id="myspinner">
             <div class="loader">Loading...</div>
         </div>
+        <div class="spinner-wrapper text-center hide" id="done_container">
+            <img id="done_class" src="https://cdn1.iconfinder.com/data/icons/color-bold-style/21/34-512.png" height="100px"/><br/>
+            <p style="color: green;"><h2>Done!</h2></p>
+        </div>
 
         <!-- Marketing messaging and featurettes
           ================================================== -->
@@ -80,10 +89,10 @@
                             <button type="button" class="btn btn-light" id="show_search">Search</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-light">Certificates</button>
+                            <button type="button" class="btn btn-light un_con">Certificates</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-light">Donations</button>
+                            <button type="button" class="btn btn-light un_con">Donations</button>
                         </div>
                         <div class="col">
                             <button type="button" class="btn btn-light" id="_fav">Favorite</button>
@@ -94,13 +103,13 @@
                             <button type="button" class="btn btn-light" id="accept_donation_btn">Accept</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-light">Events</button>
+                            <button type="button" class="btn btn-light" onclick="gotoprofile();">Post Event</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-light">Certificate</button>
+                            <button type="button" class="btn btn-light un_con">Certificate</button>
                         </div>
                         <div class="col">
-                            <button type="button" class="btn btn-light">Volunteers</button>
+                            <button type="button" class="btn btn-light un_con">Volunteers</button>
                         </div>
                     </div>
                 </div>

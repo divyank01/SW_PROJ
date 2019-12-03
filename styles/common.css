@@ -97,3 +97,7 @@
   .donation-meter{
     display: inline-flex;
   }
+
+  .done_class{
+    margin: 40vh auto;
+  }

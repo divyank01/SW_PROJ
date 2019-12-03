@@ -39,6 +39,9 @@ const render = (req, res) => {
             if (isValid(res))
                 res.sendFile(path.resolve(__dirname, `../../`, 'views', 'ngo_profile.html'))
             break
+        case `/soon`:
+            res.sendFile(path.resolve(__dirname, `../../`, 'views', 'soon.html'))
+            break
         default:
             res.sendFile(path.resolve(__dirname, `../../`, 'views', 'home.html'))
     }
