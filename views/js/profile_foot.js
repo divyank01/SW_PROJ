@@ -109,7 +109,7 @@ $('#search_ngo_btn').click(() => {
             res.ngos.map((key, idx) => {
                 $('#seach_results').append(`
                 <li class="list-group-item list-group-item-dark">
-                    ${key.ngoname}
+                    <a href="/ngo_profile?ngo_id=${key.ngoId}">${key.ngoname}</a>
                     <button type="button" class="btn add-fav btn-primary list-group-item-primary srch-res-btn" data-ngoId="${key.ngoId}">Add</button>
                 </li>`)
             })

@@ -11,7 +11,7 @@ const TYPES_PK = {
     Login:'loginId',
     Events: 'eventId',
     Interest: `interestId`,
-    Transection: 'txnId'
+    Transaction: 'txnId'
 }
 
 export default {

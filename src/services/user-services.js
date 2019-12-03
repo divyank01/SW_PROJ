@@ -357,6 +357,16 @@ const findNgoById = async (req, res) => {
     const {
         ngoId
     } = req.body
+    let userInt = undefined
+    if (req.cookies['auth-user']) {
+        const data = await get('User', {
+            userId: JSON.parse(req.cookies['auth-user']).userId
+        })
+        userInt = await get('Interest', {
+            interestId: data.interestId
+        })
+        userInt = (userInt.ngos || []).map(key => parseInt(key))
+    }
     const out = await get('NGO', {
         ngoId: parseInt(ngoId)
     })
@@ -364,7 +374,8 @@ const findNgoById = async (req, res) => {
     if (out) {
         res.write(JSON.stringify({
             status: "SUCCESS",
-            ngo: out
+            ngo: out,
+            userInt
         }))
     } else {
         res.write(JSON.stringify({
@@ -387,7 +398,7 @@ const makeDonation = async (req, res) => {
         const data = await get('User', {
             userId: JSON.parse(req.cookies['auth-user']).userId
         })
-        const txnData = await save('Transection', {
+        const txnData = await save('Transaction', {
             amt,
             userId: data.userId,
             ngoId,
@@ -426,7 +437,7 @@ const getDonation = async (req, res) => {
         const data = await get('User', {
             userId: JSON.parse(req.cookies['auth-user']).userId
         })
-        const txnData = await get('Transection', {
+        const txnData = await get('Transaction', {
             userId: JSON.parse(req.cookies['auth-user']).userId,
             txnId: parseInt(txnId)
         })
@@ -485,10 +496,10 @@ const checkout = async (req, res) => {
             state,
             zip,
             userId,
-            txnId:parseInt(txnId),
+            txnId: parseInt(txnId),
             status: 'CONFIRMED'
         }
-        const out = await update('Transection', payload, txnId)
+        const out = await update('Transaction', payload, txnId)
         res.write(JSON.stringify({
             status: "SUCCESS",
             txnData: out
@@ -507,7 +518,7 @@ const getPendingDonations = async (req, res) => {
             userId: parseInt(JSON.parse(req.cookies['auth-user']).userId)
         })
         console.log(ngoData)
-        const txnData = await getAll('Transection', {
+        const txnData = await getAll('Transaction', {
             ngoId: ngoData.ngoId.toString(),
             status: "CONFIRMED"
         })
@@ -528,7 +539,7 @@ const acceptDonation = async (req, res) => {
         console.log({
             userId: JSON.parse(req.cookies['auth-user']).userId
         })
-        await update('Transection', {
+        await update('Transaction', {
             status: "ACCEPTED"
         }, txnId)
         res.write(JSON.stringify({
@@ -538,13 +549,13 @@ const acceptDonation = async (req, res) => {
     res.end()
 }
 
-const donationsForUser = async (req,res) => {
+const donationsForUser = async (req, res) => {
     if (req.cookies['auth-user']) {
         console.log(req.cookies['auth-user'])
         console.log({
             userId: JSON.parse(req.cookies['auth-user']).userId
         })
-        const data = await getAll('Transection', {
+        const data = await getAll('Transaction', {
             status: "ACCEPTED",
             userId: JSON.parse(req.cookies['auth-user']).userId.toString()
         })
@@ -571,5 +582,6 @@ export default {
     getDonation,
     checkout,
     getPendingDonations,
-    acceptDonation,donationsForUser
+    acceptDonation,
+    donationsForUser
 }
