@@ -1,7 +1,7 @@
 import {MongoClient} from 'mongodb'
 import mongojs from 'mongojs'
 
-const uri = "mongodb+srv://meggi:megha123@cluster0-runta.mongodb.net/test?retryWrites=true&w=majority"
+const uri = "mongodb+srv://<username>:<password>@cluster0-runta.mongodb.net/test?retryWrites=true&w=majority"
 const client = new MongoClient(uri, { useNewUrlParser: true,keepAlive:true })
 const DB = `LetUsCare`
 
